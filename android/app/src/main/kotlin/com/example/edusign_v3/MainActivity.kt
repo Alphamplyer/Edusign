@@ -1,4 +1,4 @@
-package com.example.edusign_v2
+package com.example.edusign_v3
 
 import io.flutter.embedding.android.FlutterActivity
 

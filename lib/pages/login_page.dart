@@ -1,17 +1,15 @@
 import 'dart:io';
 
-import 'package:edusign_v2/pages/course_page.dart';
-import 'package:edusign_v2/services/edusign_service.dart';
-import 'package:edusign_v2/services/storage_service.dart';
+import 'package:edusign_v3/pages/course_page.dart';
+import 'package:edusign_v3/services/edusign_service.dart';
+import 'package:edusign_v3/services/storage_service.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/bool_extensions.dart';
 import '../widgets/login_widget.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.title});
-
-  final String title;
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -51,9 +49,11 @@ class _LoginPageState extends State<LoginPage> {
         await StorageService.write(key: 'rememberLogin', value: 'false');
       }
 
+      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => CoursePage()),
+        MaterialPageRoute(builder: (context) => const CoursePage()),
       );
     } on SocketException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -92,22 +92,23 @@ class _LoginPageState extends State<LoginPage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FutureBuilder(
-                    future: _stateLoading,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return LoginWidget(
-                          showRememberLogin: true,
-                          onLogin: onLogin,
-                          username: username,
-                          password: password,
-                          rememberLogin: rememberPassword,
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    }),
+                  future: _stateLoading,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return LoginWidget(
+                        showRememberLogin: true,
+                        onLogin: onLogin,
+                        username: username,
+                        password: password,
+                        rememberLogin: rememberPassword,
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  }
+                ),
               ),
             ),
           ),

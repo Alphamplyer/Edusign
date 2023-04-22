@@ -1,4 +1,5 @@
 import 'package:edusign_v3/models/course_model.dart';
+import 'package:edusign_v3/models/user_model.dart';
 import 'package:edusign_v3/services/edusign_service.dart';
 import 'package:edusign_v3/services/signature_service.dart';
 import 'package:edusign_v3/widgets/animated_validator.dart';
@@ -6,20 +7,23 @@ import 'package:edusign_v3/widgets/barcode_scanner_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-class CourseScannerPage extends StatefulWidget {
+class MultiUserCourseScannerPage extends StatefulWidget {
   final Course course;
-  
-  const CourseScannerPage({
+  final List<User> users;
+
+  const MultiUserCourseScannerPage({
     Key? key,
     required this.course,
+    required this.users,
   }) : super(key: key);
 
   @override
-  State<CourseScannerPage> createState() => _CourseScannerPageState();
+  State<MultiUserCourseScannerPage> createState() => _MultiUserCourseScannerPageState();
 }
 
-class _CourseScannerPageState extends State<CourseScannerPage> with TickerProviderStateMixin {
+class _MultiUserCourseScannerPageState extends State<MultiUserCourseScannerPage> with TickerProviderStateMixin {
   late AnimationController _controller;
+  List<String> validatedUserIds = [];
   bool shouldPop = false;
 
   @override
@@ -32,30 +36,51 @@ class _CourseScannerPageState extends State<CourseScannerPage> with TickerProvid
   }
 
   Future<bool> _onScan(Barcode barcode) async {
-    if (barcode.rawValue != null) {
-      String signature = await SignatureService.getSignature(EdusignService.user!);
+    if (barcode.rawValue == null) return false;
+
+    bool allUsersValidated = true;
+
+    for (var user in widget.users) {
+      if (validatedUserIds.contains(user.id)) continue;
 
       try {
-        bool result = await EdusignService.validateCourse(
-          EdusignService.user!,
+        String signature = await SignatureService.getSignature(user);
+
+        bool userIsValidated = await EdusignService.validateCourse(
+          user,
           widget.course,
           barcode.rawValue!,
           signature,
         );
 
-        Course course = await EdusignService.getCourseById(EdusignService.user!, widget.course.id);
+        Course course = await EdusignService.getCourseById(user, widget.course.id);
         widget.course.updateFrom(course);
 
-        if (result) {
-          shouldPop = true;
+        if (userIsValidated) {
+          validatedUserIds.add(user.id);
         }
 
-        return result;
+        showMessage(
+          context, 
+          userIsValidated
+            ? 'Successfully logged in ${user.username}'
+            : 'Failed to log in ${user.username}',
+        );
       } catch (e) {
-        return false;
-      }
+        allUsersValidated = false;
+        break;
+      }  
     }
-    return false;
+
+    return allUsersValidated;
+  }
+
+  void showMessage(BuildContext context, String message) {
+    if (!mounted) return;
+
+    ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(context);
+    scaffoldMessengerState.hideCurrentSnackBar();
+    scaffoldMessengerState.showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

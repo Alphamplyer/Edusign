@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Acrylic extends StatefulWidget {
-  Widget child;
-  Acrylic({Key? key, required this.child}) : super(key: key);
+  final Widget child;
+  const Acrylic({Key? key, required this.child}) : super(key: key);
 
   @override
   State<Acrylic> createState() => _AcrylicState();

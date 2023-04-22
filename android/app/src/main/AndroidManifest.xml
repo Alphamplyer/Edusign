@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.edusign_v2">
+    package="com.example.edusign_v3">
    <application
-        android:label="edusign_v2"
+        android:label="edusign_v3"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Uncomment the following line if flutter_secure_storage throw errors -->
+        <!-- android:allowBackup="false"> -->
         <activity
             android:name=".MainActivity"
             android:exported="true"

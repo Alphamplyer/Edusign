@@ -1,22 +1,20 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class GlowEffect extends SingleChildRenderObjectWidget {
   /// Glowing color
-  Color color;
+  final Color color;
 
   /// Blur radius
   /// Default: 10
-  double blurRadius;
+  final double blurRadius;
 
   /// Glow strength
   /// Default: 0.1
   /// 0.0 - 1.0
-  double glowStrength;
+  final double glowStrength;
 
-  GlowEffect({
+  const GlowEffect({
     super.key,
     super.child,
     this.color = Colors.white,
@@ -27,12 +25,12 @@ class GlowEffect extends SingleChildRenderObjectWidget {
   @override
   RenderGlowEffect createRenderObject(BuildContext context) {
     return RenderGlowEffect(
-        color: color, blurRadius: blurRadius, glowStrength: glowStrength);
+      color: color, blurRadius: blurRadius, glowStrength: glowStrength
+    );
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, covariant RenderGlowEffect renderObject) {
+  void updateRenderObject(BuildContext context, covariant RenderGlowEffect renderObject) {
     renderObject
       ..glowStrength = glowStrength
       ..color = color

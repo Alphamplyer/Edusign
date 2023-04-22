@@ -1,13 +1,17 @@
+import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui';
-import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
 import 'package:hand_signature/signature.dart';
 
 class SignaturePage extends StatefulWidget {
-  String? signature;
-  SignaturePage({Key? key}) : super(key: key);
+  final String? signature;
+  
+  const SignaturePage({
+    Key? key,
+    this.signature,
+  }) : super(key: key);
 
   @override
   State<SignaturePage> createState() => _SignaturePageState();
@@ -33,18 +37,20 @@ class _SignaturePageState extends State<SignaturePage> {
   }
 
   void _save() async {
-    var image =
-        await _controller.toPicture(width: 400, height: 200)?.toImage(400, 200);
+    var image = await _controller.toPicture(width: 400, height: 200)?.toImage(400, 200);
+    String? base64;
+
     if (image != null) {
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+
       if (byteData != null) {
         Uint8List pngBytes = byteData.buffer.asUint8List();
-        String base64 = convert.base64Encode(pngBytes);
-        Navigator.pop(context, base64);
-        return;
+        base64 = convert.base64Encode(pngBytes);
       }
     }
-    Navigator.pop(context);
+    
+    if (!mounted) return;
+    Navigator.pop(context, base64);
   }
 
   @override

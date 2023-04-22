@@ -1,15 +1,16 @@
-import 'package:edusign_v2/widgets/acrylic.dart';
+import 'package:edusign_v3/widgets/acrylic.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../models/course_model.dart';
 
 typedef CourseTileCallback = void Function(Course course);
 
 class CourseTile extends StatefulWidget {
-  Course course;
-  CourseTileCallback? onTap;
+  final Course course;
+  final CourseTileCallback? onTap;
 
-  CourseTile({
+  const CourseTile({
     Key? key,
     required this.course,
     this.onTap,
@@ -87,7 +88,7 @@ class _CourseTileState extends State<CourseTile> {
               widget.onTap?.call(widget.course);
             },
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 100),
+              constraints: const BoxConstraints(maxHeight: 101),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Acrylic(

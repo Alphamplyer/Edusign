@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:animated_check/animated_check.dart';
 import 'package:animated_cross/animated_cross.dart';
+import 'package:flutter/material.dart';
 
 enum ValidatorIcon { check, cross }
 
@@ -19,7 +19,8 @@ class AnimatedValidator extends StatefulWidget {
 
   /// Background circle color
   final Color? backgroundColor;
-  AnimatedValidator({
+
+  const AnimatedValidator({
     Key? key,
     required this.icon,
     required this.controller,
@@ -29,7 +30,7 @@ class AnimatedValidator extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AnimatedValidatorState createState() => _AnimatedValidatorState();
+  State<AnimatedValidator> createState() => _AnimatedValidatorState();
 }
 
 class _AnimatedValidatorState extends State<AnimatedValidator> {

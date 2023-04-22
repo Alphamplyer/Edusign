@@ -1,4 +1,5 @@
-import 'package:edusign_v2/pages/login_page.dart';
+import 'package:edusign_v3/config/constants.dart';
+import 'package:edusign_v3/pages/login_users_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -21,11 +22,12 @@ class MyApp extends StatelessWidget {
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32),
-              ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Constants.interactableBackgroundColor,
+            foregroundColor: Constants.interactableForegroundColor,
+            disabledBackgroundColor: Colors.grey.shade400.withOpacity(0.3),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32),
             ),
           ),
         ),
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LoginPage(title: 'Fluttersign'),
+      home: const LoginUsersPage(),
     );
   }
 }

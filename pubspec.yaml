@@ -1,6 +1,5 @@
-name: edusign_v2
+name: edusign_v3
 description: A new Flutter project.
-
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -20,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.4 <3.0.0'
+  sdk: '>=2.19.6 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -37,12 +36,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   http: ^0.13.5
-  intl: ^0.17.0
-  mobile_scanner: ^2.0.0
+  intl: ^0.18.1
+  mobile_scanner: ^3.2.0
   animated_check: ^1.0.5
   animated_cross: ^1.0.0
-  flutter_secure_storage: ^6.0.0
-  hand_signature: ^2.3.0+1
+  flutter_secure_storage: ^8.0.0
+  hand_signature: ^3.0.1
 
 dev_dependencies:
   flutter_test:

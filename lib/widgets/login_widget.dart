@@ -1,18 +1,19 @@
 import 'dart:async';
 
-import 'package:edusign_v2/widgets/glow_effect.dart';
+import 'package:edusign_v3/widgets/glow_effect.dart';
 import 'package:flutter/material.dart';
 
 typedef LoginCallback = FutureOr<void> Function(
     String username, String password, bool rememberLogin);
 
 class LoginWidget extends StatefulWidget {
-  bool rememberLogin;
-  bool showRememberLogin;
-  String? username;
-  String? password;
-  LoginCallback? onLogin;
-  LoginWidget({
+  final bool rememberLogin;
+  final bool showRememberLogin;
+  final String? username;
+  final String? password;
+  final LoginCallback? onLogin;
+  
+  const LoginWidget({
     Key? key,
     this.username,
     this.password,

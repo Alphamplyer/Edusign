@@ -1,44 +1,51 @@
-import 'package:edusign_v3/pages/login_page.dart';
-import 'package:edusign_v3/pages/signature_page.dart';
-import 'package:edusign_v3/services/storage_service.dart';
+import 'package:edusign_v3/models/user_model.dart';
+import 'package:edusign_v3/pages/login_users_page.dart';
+import 'package:edusign_v3/pages/multi_user_course_scanner_page.dart';
+import 'package:edusign_v3/services/course_service.dart';
 import 'package:edusign_v3/widgets/acrylic_appbar.dart';
 import 'package:edusign_v3/widgets/course_tile_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../models/course_model.dart';
 import '../services/edusign_service.dart';
-import 'course_scanner_page.dart';
 
-class CoursePage extends StatefulWidget {
-  const CoursePage({Key? key}) : super(key: key);
+class MultiUserCoursePage extends StatefulWidget {
+  final List<User> users;
+  
+  const MultiUserCoursePage({
+    Key? key,
+    required this.users,
+  }) : super(key: key);
 
   @override
-  State<CoursePage> createState() => _CoursePageState();
+  State<MultiUserCoursePage> createState() => _MultiUserCoursePageState();
 }
 
-class _CoursePageState extends State<CoursePage> {
+class _MultiUserCoursePageState extends State<MultiUserCoursePage> {
   Future<List<Course>>? _coursesFuture;
   List<Course> _courses = [];
-  List<Course> _filteredCourses = [];
+  List<Course> _todayCourses = [];
   final ValueNotifier<bool> _showFutureCourses = ValueNotifier(false);
 
   @override
   void initState() {
-    _coursesFuture =
-        EdusignService.getCourses(EdusignService.user!).then((value) {
-      _courses = value;
+    _coursesFuture = CourseService
+      .getUsersCoursesInCommon(widget.users)
+      .then((value) {
+        _courses = value;
 
-      var now = DateTime.now();
-      var startDay = DateTime(now.year, now.month, now.day);
-      var endDay = DateTime(now.year, now.month, now.day)
+        var now = DateTime.now();
+        var startDay = DateTime(now.year, now.month, now.day);
+        var endDay = DateTime(now.year, now.month, now.day)
           .add(const Duration(hours: 23, minutes: 59, seconds: 59));
 
-      _filteredCourses = _courses
-          .where((course) =>
-              startDay.isBefore(course.start) && endDay.isAfter(course.end))
+        _todayCourses = _courses
+          .where((course) => startDay.isBefore(course.start) && endDay.isAfter(course.end))
           .toList();
-      return value;
-    });
+
+        return value;
+      });
+
     super.initState();
   }
 
@@ -50,60 +57,53 @@ class _CoursePageState extends State<CoursePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CourseScannerPage(course: course),
+        builder: (context) => MultiUserCourseScannerPage(
+          course: course,
+          users: widget.users,
+        ),
       ),
     );
   }
 
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text('Show Future Courses'),
-              Switch(
-                value: _showFutureCourses.value,
-                onChanged: (value) {
-                  setState(() {
-                    _showFutureCourses.value = value;
-                  });
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Row(
+              children: [
+                SizedBox(width: 8),
+                const Text('Show Future Courses'),
+                Spacer(),
+                Switch(
+                  value: _showFutureCourses.value,
+                  onChanged: (value) {
+                    setState(() {
+                      _showFutureCourses.value = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            Card(
+              child: ListTile(
+                title: const Center(child: Text('Logout')),
+                onTap: () {
+                  EdusignService.user = null;
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginUsersPage(),
+                    ),
+                  );
                 },
               ),
-            ],
-          ),
-          Card(
-            child: ListTile(
-              title: const Center(child: Text('Change Signature')),
-              onTap: () async {
-                String? signature = await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                  return const SignaturePage();
-                }));
-
-                if (signature != null) {
-                  StorageService.write(key: 'signature', value: signature);
-                }
-              },
             ),
-          ),
-          Card(
-            child: ListTile(
-              title: const Center(child: Text('Logout')),
-              onTap: () {
-                EdusignService.user = null;
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -154,7 +154,7 @@ class _CoursePageState extends State<CoursePage> {
                             valueListenable: _showFutureCourses,
                             builder: (context, value, child) {
                               List<Course> courses =
-                                  value ? _courses : _filteredCourses;
+                                  value ? _courses : _todayCourses;
                               return ListView.builder(
                                 itemCount: courses.length,
                                 itemBuilder: (context, index) {

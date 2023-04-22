@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'dart:io';
 
 import 'barcode_area_painter.dart';
 
@@ -54,7 +54,7 @@ class BarcodeScannerAnimationController {
 
 class BarcodeScanner extends StatefulWidget {
   /// Callback called each a barcode is scanned
-  FutureOr<bool> Function(Barcode)? onScan;
+  final FutureOr<bool> Function(Barcode)? onScan;
 
   /// Delay beetween each scan
   /// [null] means no delay
@@ -62,11 +62,11 @@ class BarcodeScanner extends StatefulWidget {
   final Duration? scanDelay;
 
   /// Widget used to optimize rendering
-  Widget? child;
+  final Widget? child;
 
   /// Build a widget at the center of the scanner
   /// Used to animate the scanner when Idle, Processing, Success, Failure
-  Widget? Function(BuildContext, ScanState, AnimationScanState,
+  final Widget? Function(BuildContext, ScanState, AnimationScanState,
       BarcodeScannerAnimationController, Widget?)? builder;
 
   /// Called after the the Success Animation
@@ -76,22 +76,22 @@ class BarcodeScanner extends StatefulWidget {
   final void Function()? afterFailureAnimation;
 
   /// Vibrate each time a code is scanned
-  bool hapticFeedback;
+  final bool hapticFeedback;
 
   /// Allow scanning the same barcode multiple times
-  bool allowDuplicates;
+  final bool allowDuplicates;
 
   /// Force the indicator to be displayed as a square
-  bool squareIndicator;
+  final bool squareIndicator;
 
   /// Determine if the torch can be switched on or off
-  bool torchSwitcheable;
+  final bool torchSwitcheable;
 
   /// Determine if the camera can be switched between front and back
-  bool cameraSwitcheable;
+  final bool cameraSwitcheable;
 
-  BarcodeScanner({
-    Key? key,
+  const BarcodeScanner({
+    super.key,
     this.onScan,
     this.scanDelay,
     this.builder,
@@ -103,10 +103,10 @@ class BarcodeScanner extends StatefulWidget {
     this.squareIndicator = false,
     this.torchSwitcheable = true,
     this.cameraSwitcheable = true,
-  }) : super(key: key);
+  });
 
   @override
-  _BarcodeScannerState createState() => _BarcodeScannerState();
+  State<BarcodeScanner> createState() => _BarcodeScannerState();
 }
 
 class _BarcodeScannerState extends State<BarcodeScanner> {
@@ -131,7 +131,9 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
       _notifier.notify();
     });
 
-    _controller = MobileScannerController();
+    _controller = MobileScannerController(
+      detectionSpeed: DetectionSpeed.noDuplicates,
+    );
     super.initState();
   }
 
@@ -152,16 +154,21 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
     _controller?.start();
   }
 
-  void _onBarcodeDetected(
-    Barcode barcode,
-    MobileScannerArguments? arguments,
-  ) async {
+  void _onBarcodeDetected(BarcodeCapture barcodeCapture) async {
     if (_animationState.value != AnimationScanState.waiting) {
       return;
     }
 
     _animationState.value = AnimationScanState.processing;
-    bool success = await Future.value(widget.onScan!(barcode));
+    
+    bool success = false;
+    for (Barcode barcode in barcodeCapture.barcodes) {
+      success = await Future.value(widget.onScan!(barcode));
+      if (success) {
+        break;
+      }
+    }
+
     if (_scanState.value == ScanState.beforeFirstScan) {
       _scanState.value = ScanState.firstScan;
     } else {
@@ -206,7 +213,7 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
         key: qrKey,
         controller: _controller,
         onDetect: _onBarcodeDetected,
-        allowDuplicates: widget.allowDuplicates,
+
       ),
       FractionallySizedBox(
         heightFactor: 1,
@@ -254,8 +261,8 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
               builder: (context, value, child) {
                 return IconButton(
                   icon: value == TorchState.on
-                      ? Icon(Icons.flash_on)
-                      : Icon(Icons.flash_off),
+                      ? const Icon(Icons.flash_on)
+                      : const Icon(Icons.flash_off),
                   onPressed: () {
                     _controller!.toggleTorch();
                   },
