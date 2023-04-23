@@ -32,7 +32,7 @@ class _LoginUsersPageState extends State<LoginUsersPage> {
   }
 
   Future<bool> _loadState() async {
-    usersCrendentials = await UserCredentialsService.getSavedUsersCredentials();
+    usersCrendentials = await UserCredentialsService.loadAllUsersCredentials();
     String? storedValueOfPreviouslySelectedUsernames = (await StorageService.read(key: StorageKeys.PREVIOUSLY_SELECTED_USERNAMES));
     if (storedValueOfPreviouslySelectedUsernames != null) {
       previouslySelectedUsernames = storedValueOfPreviouslySelectedUsernames.split(',');
@@ -117,7 +117,7 @@ class _LoginUsersPageState extends State<LoginUsersPage> {
               child: ListTile(
                 title: const Center(child: Text('Clear saved users')),
                 onTap: () {
-                  UserCredentialsService.clearSavedUsersCredentials();
+                  UserCredentialsService.deleteUsersCredentials();
                   previouslySelectedUsernames.clear();
                   setState(() {
                     _stateLoading = _loadState();
@@ -191,9 +191,9 @@ class _LoginUsersPageState extends State<LoginUsersPage> {
                   future: _stateLoading,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                      return _buildHasUserAdded(context);
-                    } else if (snapshot.connectionState == ConnectionState.done) {
-                      return _buildNoUserAdded(context);
+                      return usersCrendentials.isEmpty
+                        ? _buildNoUserAdded(context)
+                        : _buildHasUserAdded(context);
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {

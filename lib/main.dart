@@ -1,9 +1,11 @@
-import 'package:edusign_v3/config/constants.dart';
 import 'package:edusign_v3/pages/login_users_page.dart';
+import 'package:edusign_v3/views/onboarding/onboarding.view.dart';
 import 'package:flutter/material.dart';
 
+import 'config/edusign_Colors.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(const EdusignApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -14,6 +16,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fluttersign',
       theme: ThemeData.dark(useMaterial3: false).copyWith(
+        colorScheme: ColorScheme.dark(
+          primary: EdusignColors.defaultBackgroundColor,
+          onPrimary: EdusignColors.defaultForegroundColor,
+          secondary: EdusignColors.interactableBackgroundColor,
+          onSecondary: EdusignColors.interactableForegroundColor,
+        ),
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(
@@ -23,8 +31,8 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Constants.interactableBackgroundColor,
-            foregroundColor: Constants.interactableForegroundColor,
+            backgroundColor: EdusignColors.interactableBackgroundColor,
+            foregroundColor: EdusignColors.interactableForegroundColor,
             disabledBackgroundColor: Colors.grey.shade400.withOpacity(0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32),
@@ -38,6 +46,19 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const LoginUsersPage(),
+    );
+  }
+}
+
+class EdusignApp extends StatelessWidget {
+  const EdusignApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Edusign',
+      theme: ThemeData.dark(useMaterial3: true),
+      home: const OnboardingView(),
     );
   }
 }

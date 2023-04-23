@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'dart:convert';
 
 import '../models/course_model.dart';
 import '../models/user_model.dart';
@@ -16,7 +17,7 @@ class EdusignService {
           'EMAIL': username,
           'PASSWORD': password,
           'LANGUAGE': 'EN',
-        });
+        }).timeout(Duration(seconds: 20));
 
     var body = json.decode(response.body);
 
@@ -34,7 +35,7 @@ class EdusignService {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${user.token}',
-        });
+        }).timeout(Duration(seconds: 20));
 
     var body = json.decode(response.body);
 
@@ -59,7 +60,7 @@ class EdusignService {
         'Model': 'Fluttersign',
         'signature': 'data:image/png;base64,$signature'
       },
-    );
+    ).timeout(Duration(seconds: 20));
 
     var body = json.decode(response.body);
 
@@ -71,7 +72,7 @@ class EdusignService {
         .get(Uri.parse('https://api.edusign.fr/student/courses/$id'), headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${user.token}',
-    });
+    }).timeout(Duration(seconds: 20));
 
     var body = json.decode(response.body);
 

@@ -42,6 +42,7 @@ dependencies:
   animated_cross: ^1.0.0
   flutter_secure_storage: ^8.0.0
   hand_signature: ^3.0.1
+  collection: ^1.17.0
 
 dev_dependencies:
   flutter_test:

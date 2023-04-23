@@ -1,12 +1,7 @@
 
-import 'package:flutter/material.dart';
-
 class Constants {
-  static const Color interactableBackgroundColor = Color(0xFFE3624B);
-  static const Color interactableForegroundColor = Color(0xFFFFFFFF);
+  static const int defaultAnimationDurationInMiliseconds = 300;
+  static const Duration defaultIconAnimationDuration = const Duration(milliseconds: 350);
 
-  static const List<Color> backgroundGradientColors = [
-    Color(0xFF2C3E50),
-    Color(0xFF4CA1AF),
-  ];
+  static const kEdusignAppBarHeight = 68.0;
 }

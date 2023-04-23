@@ -25,7 +25,7 @@ class _AddUserPageState extends State<AddUserPage> {
   void onLogin(String username, String password, bool rememberLogin) async {
     try {
       await EdusignService.login(username, password);
-      await UserCredentialsService.addUserCrendential(UserCredential(
+      await UserCredentialsService.saveUserCrendential(UserCredential(
         username: username,
         password: password
       ));

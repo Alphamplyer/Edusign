@@ -21,4 +21,12 @@ class StorageService {
   static Future<void> delete({required String key}) async {
     await _storage.delete(key: key);
   }
+
+  static Future<bool> containsKey({required String key}) async {
+    return await _storage.containsKey(key: key);
+  }
+
+  static Future<void> deleteAll() async {
+    await _storage.deleteAll();
+  }
 }

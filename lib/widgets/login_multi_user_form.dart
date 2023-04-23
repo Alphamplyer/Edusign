@@ -1,8 +1,9 @@
 
-import 'package:edusign_v3/config/constants.dart';
 import 'package:edusign_v3/config/storage_keys.dart';
 import 'package:edusign_v3/services/storage_service.dart';
 import 'package:flutter/material.dart';
+
+import '../config/edusign_Colors.dart';
 
 class LoginMultiUserForm extends StatefulWidget {
   final List<String> userNames;
@@ -39,8 +40,8 @@ class _LoginMultiUserFormState extends State<LoginMultiUserForm> {
             itemCount: widget.userNames.length,
             itemBuilder: (context, index) {
               return CheckboxListTile(
-                activeColor: Constants.interactableBackgroundColor,
-                checkColor: Constants.interactableForegroundColor,
+                activeColor: EdusignColors.interactableBackgroundColor,
+                checkColor: EdusignColors.interactableForegroundColor,
                 title: Text(widget.userNames[index]),
                 value: selectedUsers.contains(widget.userNames[index]),
                 onChanged: (value) {

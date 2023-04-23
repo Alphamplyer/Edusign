@@ -55,10 +55,10 @@ class _AnimatedValidatorState extends State<AnimatedValidator> {
             color: widget.color,
           )
         : AnimatedCross(
-            progress: _animationValidator,
-            size: widget.size,
-            color: widget.color,
-          );
+          progress: _animationValidator,
+          size: widget.size,
+          color: widget.color,
+        );
     super.initState();
   }
 

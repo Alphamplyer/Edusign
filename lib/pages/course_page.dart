@@ -1,5 +1,6 @@
 import 'package:edusign_v3/pages/login_page.dart';
 import 'package:edusign_v3/pages/signature_page.dart';
+import 'package:edusign_v3/services/course_service.dart';
 import 'package:edusign_v3/services/storage_service.dart';
 import 'package:edusign_v3/widgets/acrylic_appbar.dart';
 import 'package:edusign_v3/widgets/course_tile_widget.dart';
@@ -25,7 +26,7 @@ class _CoursePageState extends State<CoursePage> {
   @override
   void initState() {
     _coursesFuture =
-        EdusignService.getCourses(EdusignService.user!).then((value) {
+        CourseService.getUserCourses(EdusignService.user!).then((value) {
       _courses = value;
 
       var now = DateTime.now();
