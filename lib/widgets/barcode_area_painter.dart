@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:edusign_v3/config/constants.dart';
 import 'package:flutter/material.dart';
 
 class BarcodeAreaPainter extends CustomPainter {
@@ -15,7 +16,7 @@ class BarcodeAreaPainter extends CustomPainter {
 
   BarcodeAreaPainter({
     this.strokeWidth = 6,
-    this.radius = 16,
+    this.radius = Constants.kDefaultBorderRadius,
     this.widthLengthPercent = 0.5,
     this.heightLengthPercent = 0.5,
     this.color = Colors.white,

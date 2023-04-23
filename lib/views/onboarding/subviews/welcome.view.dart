@@ -1,4 +1,5 @@
 
+import 'package:edusign_v3/config/constants.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeView extends StatelessWidget {
@@ -13,7 +14,7 @@ class WelcomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Constants.kDefaultPadding),
         child: Column(
           children: [
             Expanded(

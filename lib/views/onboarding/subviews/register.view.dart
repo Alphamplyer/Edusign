@@ -1,4 +1,5 @@
 
+import 'package:edusign_v3/config/constants.dart';
 import 'package:edusign_v3/models/user_credential.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,7 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(Constants.kDefaultPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

@@ -9,7 +9,7 @@ class EdusignColors {
   static const Color interactableForegroundColor = Color(0xFFFFFFFF);
 
   static const Color errorColorForeground = Colors.red;
-  static const Color successColorForeground = Colors.green;
+  static const Color successColorForeground = Color.fromARGB(255, 65, 139, 66);
 
   static const List<Color> backgroundGradientColors = [
     Color(0xFF2C3E50),

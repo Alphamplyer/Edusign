@@ -1,4 +1,5 @@
 
+import 'package:edusign_v3/config/constants.dart';
 import 'package:edusign_v3/config/storage_keys.dart';
 import 'package:edusign_v3/services/storage_service.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,7 @@ class _LoginMultiUserFormState extends State<LoginMultiUserForm> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(Constants.kDefaultPadding),
           child: SizedBox(
             height: 50,
             child: ElevatedButton(

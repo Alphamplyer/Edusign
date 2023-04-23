@@ -1,3 +1,4 @@
+import 'package:edusign_v3/config/constants.dart';
 import 'package:edusign_v3/pages/login_users_page.dart';
 import 'package:edusign_v3/views/onboarding/onboarding.view.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,15 @@ class EdusignApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Edusign',
-      theme: ThemeData.dark(useMaterial3: true),
+      theme: ThemeData.dark(useMaterial3: true).copyWith(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Constants.kDefaultBorderRadius),
+            ),
+          )
+        )
+      ),
       home: const OnboardingView(),
     );
   }
