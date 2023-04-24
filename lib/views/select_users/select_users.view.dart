@@ -1,6 +1,6 @@
 
 import 'package:edusign_v3/config/constants.dart';
-import 'package:edusign_v3/views/loging_in_users/loging_in_users.view.dart';
+import 'package:edusign_v3/views/loading_user_data/loading_user_data.view.dart';
 import 'package:edusign_v3/views/select_users/select_users.view_model.dart';
 import 'package:edusign_v3/widgets/edusign_scaffold.dart';
 import 'package:flutter/material.dart';
