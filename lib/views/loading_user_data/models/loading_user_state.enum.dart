@@ -2,7 +2,7 @@
 enum LoadingUserState {
   loggingUser,
   loadingUserCourses,
-  tryingToGetTheEnrolledCourse,
+  checkingIfUserIsEnrolled,
   succeed,
   failed,
 }

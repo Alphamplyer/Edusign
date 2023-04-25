@@ -77,7 +77,7 @@ class LoadingUserTile extends StatelessWidget {
     switch (loadingState) {
       case LoadingUserState.loggingUser:
       case LoadingUserState.loadingUserCourses:
-      case LoadingUserState.tryingToGetTheEnrolledCourse:
+      case LoadingUserState.checkingIfUserIsEnrolled:
         return SizedBox(
           width: 20,
           height: 20,

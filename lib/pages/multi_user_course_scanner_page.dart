@@ -48,7 +48,7 @@ class _MultiUserCourseScannerPageState extends State<MultiUserCourseScannerPage>
 
         bool userIsValidated = await EdusignService.validateCourse(
           user,
-          widget.course,
+          widget.course.id,
           barcode.rawValue!,
           signature,
         );

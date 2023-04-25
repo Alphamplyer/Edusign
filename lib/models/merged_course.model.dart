@@ -8,6 +8,8 @@ class UserCourseDetails extends ChangeNotifier {
   bool presence;
   bool absence;
 
+  bool get isScanned => presence || absence;
+
   UserCourseDetails({
     required this.presence,
     required this.absence,

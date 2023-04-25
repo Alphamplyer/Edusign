@@ -1,26 +1,28 @@
-import 'package:edusign_v3/models/course_model.dart';
-import 'package:edusign_v3/services/edusign_service.dart';
-import 'package:edusign_v3/services/signature_service.dart';
+
+import 'package:edusign_v3/models/merged_course.model.dart';
+import 'package:edusign_v3/views/browse_courses/browse_courses.view.dart';
+import 'package:edusign_v3/views/scan_qrcode/scan_qrcode.view_model.dart';
 import 'package:edusign_v3/widgets/animated_validator.dart';
 import 'package:edusign_v3/widgets/barcode_scanner_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-class CourseScannerPage extends StatefulWidget {
-  final Course course;
+class ScanQrCodeView extends StatefulWidget {
+  final MergedCourse mergedCourse;
   
-  const CourseScannerPage({
-    Key? key,
-    required this.course,
-  }) : super(key: key);
+  const ScanQrCodeView({
+    super.key,
+    required this.mergedCourse,
+  });
 
   @override
-  State<CourseScannerPage> createState() => _CourseScannerPageState();
+  State<ScanQrCodeView> createState() => _ScanQrCodeViewState();
 }
 
-class _CourseScannerPageState extends State<CourseScannerPage> with TickerProviderStateMixin {
+class _ScanQrCodeViewState extends State<ScanQrCodeView> with SingleTickerProviderStateMixin {
+  late ScanQrcodeViewModel _viewModel;
   late AnimationController _controller;
-  bool shouldPop = false;
+  List<String> validatedUserIds = [];
 
   @override
   void initState() {
@@ -28,34 +30,29 @@ class _CourseScannerPageState extends State<CourseScannerPage> with TickerProvid
       vsync: this,
       duration: const Duration(milliseconds: 350),
     );
+    _viewModel = ScanQrcodeViewModel(mergedCourse: widget.mergedCourse);
     super.initState();
   }
 
   Future<bool> _onScan(Barcode barcode) async {
-    if (barcode.rawValue != null) {
-      String signature = await SignatureService.getSignature(EdusignService.user!);
+    if (barcode.rawValue == null) return false;
+    bool allUsersValidated = await _viewModel.onScan(barcode.rawValue!);
+    return allUsersValidated;
+  }
 
-      try {
-        bool result = await EdusignService.validateCourse(
-          EdusignService.user!,
-          widget.course.id,
-          barcode.rawValue!,
-          signature,
-        );
+  void _afterSuccessAnimation() {
+    Navigator.pushReplacement(
+      context, 
+      MaterialPageRoute(builder: (context) => BrowseCoursesView()),
+    );
+  }
 
-        Course course = await EdusignService.getCourseById(EdusignService.user!, widget.course.id);
-        widget.course.updateFrom(course);
+  void showMessage(BuildContext context, String message) {
+    if (!mounted) return;
 
-        if (result) {
-          shouldPop = true;
-        }
-
-        return result;
-      } catch (e) {
-        return false;
-      }
-    }
-    return false;
+    ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(context);
+    scaffoldMessengerState.hideCurrentSnackBar();
+    scaffoldMessengerState.showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -63,9 +60,7 @@ class _CourseScannerPageState extends State<CourseScannerPage> with TickerProvid
     return Scaffold(
       body: BarcodeScanner(
         onScan: _onScan,
-        afterSuccessAnimation: () {
-          Navigator.pop(context);
-        },
+        afterSuccessAnimation: _afterSuccessAnimation,
         allowDuplicates: true,
         scanDelay: const Duration(seconds: 1),
         squareIndicator: true,

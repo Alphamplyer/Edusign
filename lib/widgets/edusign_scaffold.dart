@@ -3,8 +3,6 @@
 import 'package:edusign_v3/config/constants.dart';
 import 'package:flutter/material.dart';
 
-
-
 class EdusignScaffold extends StatelessWidget {
   final Widget body;
   final Drawer? drawer;

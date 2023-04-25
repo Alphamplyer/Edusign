@@ -1,6 +1,7 @@
 
 import 'package:edusign_v3/models/course_model.dart';
 import 'package:edusign_v3/models/merged_course.model.dart';
+import 'package:edusign_v3/models/user_model.dart';
 import 'package:edusign_v3/views/loading_user_data/models/loading_result.model.dart';
 import 'package:edusign_v3/views/loading_user_data/states/loading_user_tile.state.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,7 @@ class LogingInUsersViewModel with ChangeNotifier {
       throw Exception("The loading is still in progress.");
     }
 
+    List<User> validatedUsers = [];
     List<String> failedUsers = [];
     Map<String, UserCourseDetails> userCourseDetails = {};
     Course? course;
@@ -66,6 +68,8 @@ class LogingInUsersViewModel with ChangeNotifier {
         course = loadingUserTileState.course;
       }
 
+      validatedUsers.add(loadingUserTileState.user!);
+
       userCourseDetails[loadingUserTileState.username] = UserCourseDetails(
         presence: loadingUserTileState.course!.presence,
         absence: loadingUserTileState.course!.absence,
@@ -75,6 +79,7 @@ class LogingInUsersViewModel with ChangeNotifier {
     if (course == null) {
       return LoadingResult(
         allUsersLoadedSuccessfully: false,
+        validatedUsers: [],
         failedUsers: failedUsers,
         mergedCourse: null,
       );
@@ -82,6 +87,7 @@ class LogingInUsersViewModel with ChangeNotifier {
 
     return LoadingResult(
       allUsersLoadedSuccessfully: failedUsers.isEmpty,
+      validatedUsers: validatedUsers,
       failedUsers: failedUsers,
       mergedCourse: MergedCourse.fromCourse(
         course, 

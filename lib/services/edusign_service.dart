@@ -51,12 +51,12 @@ class EdusignService {
   }
 
   static Future<bool> validateCourse(
-      User user, Course course, String code, String signature) async {
+      User user, String courseId, String code, String signature) async {
     Response response = await http.post(
       Uri.parse('https://api.edusign.fr/student/courses/scanQRCode-v2'),
       headers: {'Authorization': 'Bearer ${user.token}', 'QrCodeId': code},
       body: {
-        'courseId': course.id,
+        'courseId': courseId,
         'Model': 'Fluttersign',
         'signature': 'data:image/png;base64,$signature'
       },

@@ -18,6 +18,9 @@ class LoadingUserTileState {
   ValueNotifier<LoadingUserState> _stateValueNotifier = ValueNotifier(LoadingUserState.loggingUser);
   ValueNotifier<LoadingUserState> get stateValueNotifier => _stateValueNotifier;
 
+  User? _user;
+  User? get user => _user;
+
   Course? _course;
   Course? get course => _course;
 
@@ -49,8 +52,8 @@ class LoadingUserTileState {
 
   Future<void> _loginUser(UserCredential userCredential) async {
     try {
-      User user = await UserService.login(userCredential);
-      _loadUserCourse(user);
+      _user = await UserService.login(userCredential);
+      _loadUserCourse(_user!);
     } on SocketException {
       _failingReason = "Failed to login user: Unable to contact the server or something went " +
         "wrong. Please try again later. If the problem persists, please contact the support.";
